@@ -10,12 +10,7 @@ time_exit=1800;
 tol2=0.01;
 num_ins=10;
 cplx=0;
-addpath('./instances')
-addpath('./functions')
-addpath('./functions/sbb_our_model')
-addpath('./functions/Gurobi')
-addpath('./functions/Consgen')
-addpath('./gen_network/')
+addpath(genpath('~/Desktop/ValueofRandomization/'));
 load instances_random
 G_sioux = readtable('SiouxFalls.csv');
 G_nobelus=readtable('nobelus.csv');
@@ -67,10 +62,8 @@ for it1 = 1:2
             l1b=Gamma*(K^0.5);
             qhat=(1/K)*ones(1,K);
             % % Bilinear Gurobi
-            rel_heur_ON=true;
             time_yalmip=0;
             time=0;
-            flows_all = compute_f_l_k(cap,set_non_rem,set_rem,B,E,G,N,K);
             flag=0;
             [~,UB,~,~,time] = gurobi_bilinear(flow_k, Gamma,alpha,...
                 K,qhat,nchoosek(E-size_set_non_rem,B),zeta_lb,zeta_ub,time_yalmip,time,l1b);
@@ -114,5 +107,10 @@ avg_time_gurobi_bilinear = mean(time_sbb_gurobi, 1);
 avg_time_consgen = mean(time_consgen, 1);
 avg_time_sbb = mean(time_sbb, 1);
 avg_time_sbb_CG = mean(time_sbb_CG, 1);
+mat = [avg_time_gurobi_bilinear avg_time_consgen(:)...
+    avg_time_sbb(:) avg_time_sbb_CG(:)];
+mat = reshape(mat, [],2);
+filename = 'Compare_Gurobi_SBB_realnetworks.csv';
+writematrix(mat, filename)
 
 

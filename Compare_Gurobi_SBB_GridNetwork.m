@@ -1,7 +1,7 @@
 clc
 clear
 close all
-B=2;
+B=2; % budget of interdiction 
 alpha=0.05;
 p=5; r=5; 
 n_iter_CD=2;partitions_sbb=1;
@@ -10,7 +10,7 @@ time_exit=1800;
 tol2=0.01;
 num_ins=10;
 cplx=0;
-addpath(genpath('~/Desktop/CPLEX_SBB_git/'))
+addpath(genpath('~/Desktop/ValueofRandomization/'));
 load instances_random
 K = length(K_all);
 convrge_gurobi_bilinear=zeros(num_ins,K);
@@ -48,12 +48,11 @@ for ij=1:num_ins
         l1b=Gamma*(K^0.5);
         qhat=(1/K)*ones(1,K);
         % % Bilinear Gurobi
-        rel_heur_ON=true;
         time_yalmip=0;
         time=0;
         flag=0;
         [~,UB,~,~,time] = gurobi_bilinear(flow_k, Gamma,alpha,...
-            K,qhat,nchoosek(E-size_set_non_rem,B),zeta_lb,zeta_ub,time_yalmip,time,l1b, ~rel_heur_ON);
+            K,qhat,nchoosek(E-size_set_non_rem,B),zeta_lb,zeta_ub,time_yalmip,time,l1b);
         convrge_gurobi_bilinear(ij,k)=flag;
         time_gurobi_bilinear(ij,k)=time;
         cvar_gurobi_bilinear(ij,k)=UB;
@@ -71,7 +70,7 @@ for ij=1:num_ins
         % % Constraint Generation
         time =0;
         [u, zeta,   cvar, time, J_lists, flag, ts]  =  ConsGen_GurobiBilinear(flow_k,zeta_lb,zeta_ub,...
-            qhat, tol2, alpha, Gamma, K, time, time_exit,~rel_heur_ON,tol2);
+            qhat, tol2, alpha, Gamma, K, time, time_exit,tol2);
         convrge_consgen(ij,k) = flag;
         time_consgen(ij,k)=time;
         cvar_consgen(ij,k)=cvar;
@@ -93,5 +92,9 @@ avg_time_gurobi_bilinear = squeeze(mean(time_sbb_gurobi, 1));
 avg_time_consgen = squeeze(mean(time_consgen, 1));
 avg_time_sbb = squeeze(mean(time_sbb, 1));
 avg_time_sbb_CG = squeeze(mean(time_sbb_CG, 1));
+mat = [avg_time_gurobi_bilinear(:) avg_time_consgen(:)...
+    avg_time_sbb(:) avg_time_sbb_CG(:)]; 
+filename = 'Compare_Gurobi_SBB_Gridnetwork.csv';
+writematrix(mat, filename)
 
 

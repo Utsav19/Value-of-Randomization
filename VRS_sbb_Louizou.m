@@ -12,87 +12,101 @@ qhat=(1/K)*ones(1,K);
 n_iter_CD=2;
 partitions_sbb=1;
 time_exit=7200;
-cvar_L_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
-cvar_R_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
-cvar_D_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
+cvar_loizou_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
+cvar_sbb_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
+cvar_det_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
 tol2=0.01;
 addpath(genpath('~/Desktop/ValueofRandomization/'))
 load all_instances_performance
 ins_nconvrg=zeros(num_ins,1);
 cplx=1;
-% for ij=1:num_ins
-%     dir1=Direction_all{ij};
-%     G = graph_generate(p,r,dir1);
-%     [E,N,set_non_rem,set_rem]= graph_set_rem(G,p,r); % generate set of removable and nonremovable arcs
-%     size_set_non_rem=size(set_non_rem,1);
-%     cap_all =all_C{ij};
-%     [cap,diag_cap,diag_cap_non_rem,zeta_lb,zeta_ub]=capacities_dirichlet(G,K,...
-%         E,N,set_non_rem, cap_all);
-%     for it1=1:size(Gamma_set,1)
-%         for it2=1:size(B_set,1)
-%             for it3=1:size(alpha_set,1)
-%                 l1b=Gamma_set(it1)*(K^0.5);
-%                 Gamma=Gamma_set(it1);
-%                 B=B_set(it2);
-%                 alpha=alpha_set(it3);
-%                 flag=0;
-%                 [cvar_D,deter_p,l_h] = deterministic_wcvar(E,N,B,alpha,Gamma,qhat, K,...
-%                     diag_cap,set_non_rem,diag_cap_non_rem,set_rem,zeta_lb,zeta_ub,l1b,cplx);
-%                 l_0=round(l_h);
-%                 time_yalmip=0;
-%                 time=0;
-%                 [~, cvar_R, u_R,~,flag, leastLB,z_supp_R]...
-%                     = sbb_CG(l_0,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
-%                     flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol2,time_exit,set_non_rem,...
-%                     diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
-%                 l_in=[ones(B,1);zeros(E-size_set_non_rem-B,1)];
-%                 time_yalmip = 0;
-%                 time =0;
-%                 [fl_opt,z_supp_L,~,time]= Loizou_support(alpha,Gamma,cap,diag_cap,...
-%                     l_0,E,N,B,K,G,qhat,set_non_rem,diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
-%                 [u_L,cvar_L,zeta,time_yalmip,time]=Loizou_Primal(fl_opt,size(z_supp_L,2),K,zeta_lb,...
-%                     zeta_ub,alpha, Gamma,qhat,set_non_rem,diag_cap_non_rem,time_yalmip,time,l1b,cplx);
-%                 cvar_D_all(ij,it1,it2,it3) = cvar_D;
-%                 cvar_R_all(ij,it1,it2,it3) = cvar_R;
-%                 cvar_L_all(ij,it1,it2,it3) = cvar_L;
-%             end
-%         end
-%     end
-% end
-% cvar{1}=cvar_R_all;
-% cvar{2} =cvar_L_all;
-% for i=1:2
-%     rel_diff= 100*(cvar_D - cvar{i})./cvar{i};
-%     idx_1 = rel_diff>=1;
-%     idx_0 = rel_diff<0.1;
-%     idx_0to1= num_ins -(idx_0+idx_1);
-%     num_inst_VRS_higherthan1{i} = sum(idx_1,1);
-%     num_inst_VRS_0{i} = sum(idx_0,1);
-%     num_inst_VRS_0to1{i} = sum(idx_0to1,1);
-%     avg_VRS{i} = sum(rel_diff,1)./sum(idx_1,1);
-% end
+for ij=1:num_ins
+    dir1=Direction_all{ij};
+    G = graph_generate(p,r,dir1);
+    [E,N,set_non_rem,set_rem]= graph_set_rem(G,p,r); % generate set of removable and nonremovable arcs
+    size_set_non_rem=size(set_non_rem,1);
+    cap_all =all_C{ij};
+    [cap,diag_cap,diag_cap_non_rem,zeta_lb,zeta_ub]=capacities_dirichlet(G,K,...
+        E,N,set_non_rem, cap_all);
+    for it1=1:size(alpha_set,1)
+        for it2=1:size(B_set,1)
+            for it3=1:size(Gamma_set,1)
+                l1b=Gamma_set(it3)*(K^0.5);
+                Gamma=Gamma_set(it3);
+                B=B_set(it2);
+                alpha=alpha_set(it1);
+                flag=0;
+                [cvar_D,deter_p,l_h] = deterministic_wcvar(E,N,B,alpha,Gamma,qhat, K,...
+                    diag_cap,set_non_rem,diag_cap_non_rem,set_rem,zeta_lb,zeta_ub,l1b,cplx);
+                l_0=round(l_h);
+                time_yalmip=0;
+                time=0;
+                [~, cvar_R, u_R,~,flag, leastLB,z_supp_R]...
+                    = sbb_CG(l_0,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
+                    flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol2,time_exit,set_non_rem,...
+                    diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
+                l_in=[ones(B,1);zeros(E-size_set_non_rem-B,1)];
+                time_yalmip = 0;
+                time =0;
+                [fl_opt,z_supp_L,~,time]= Loizou_support(alpha,Gamma,cap,diag_cap,...
+                    l_0,E,N,B,K,G,qhat,set_non_rem,diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
+                [u_L,cvar_L,zeta,time_yalmip,time]=Loizou_Primal(fl_opt,size(z_supp_L,2),K,zeta_lb,...
+                    zeta_ub,alpha, Gamma,qhat,set_non_rem,diag_cap_non_rem,time_yalmip,time,l1b,cplx);
+                cvar_det_all(ij,it1,it2,it3) = cvar_D;
+                cvar_sbb_all(ij,it1,it2,it3) = cvar_R;
+                cvar_loizou_all(ij,it1,it2,it3) = cvar_L;
+            end
+        end
+    end
+end
 
-n_ins=100; n_train=100;
+% % generate table in the paper
+cvar{1}=cvar_sbb_all;
+cvar{2} =cvar_loizou_all;
+mat=[];
+for i=1:2
+    rel_diff= 100*(cvar_det_all - cvar{i})./cvar{i};
+    idx_1 = rel_diff>=1;
+    idx_0 = rel_diff<0.1;
+    VRS_high1 = sum(idx_1,1);
+    VRS0 = sum(idx_0,1);
+    VRS_less1 = num_ins-(VRS_high1+VRS0);
+    avg_VRS = sum(rel_diff,1)./sum(idx_1,1);
+    mat=[mat VRS0(:) VRS_less1(:)...
+        VRS_high1(:) avg_VRS(:)];
+end
+
+filename = 'Insample_VRS-sbb_Loizou.csv';
+writematrix(mat, filename);
+
+
+%% out of sample test
+
+% determine instances for which VRS>=1 for all Gammas
+ij=1:1:100;
+alpha=0.1;
+B=9;
+idx1 = find(alpha_set==alpha);
+idx2 = find(B_set==B);
+cvar_D= squeeze(cvar_D_100(:,idx1,idx2,:));
+cvar_R= squeeze(cvar_R_100(:,idx1,idx2,:));
+rel_SD_diff= 100*(cvar_D - cvar_R)./cvar_R;
+indx = rel_SD_diff(:,1)>=1;
+A=ij(indx);
+for i=1:size(Gamma_set)-1
+    indx_next = rel_SD_diff(:,i+1)>=1;
+    Ap=ij(indx_next);
+    indxed =intersect(A,Ap);
+    A=indxed;
+end
+
+n_train=100;
 instance_all=[];
 alpha=0.1;
 qhat=(1/K)*ones(1,K);
-n_iter_CD=2;partitions_sbb=1;time_exit=7200;
-
 load seeds_out_sample.mat
-ij=1:1:100;
-cvar_D= squeeze(cvar_D_100(:,3,2,:));
-cvar_R= squeeze(cvar_R_100(:,3,2,:));
-rel_SD_diff= 100*(cvar_D - cvar_R)./cvar_R;
-indx1 = rel_SD_diff(:,1)>=1;
-indx2 = rel_SD_diff(:,2)>=1;
-indx3= rel_SD_diff(:,3)>=1;
-A=ij(indx1);
-B=ij(indx2);
-C=ij(indx2);
-indxed = intersect(intersect(A,B),C);
-B= 9;
-conc_all = [0.1;0.3;0.5;0.8];
-cplx=1;
+
+betas = [0.1;0.3;0.5;0.8];
 for i1=1:length(indxed)
     ij = indxed(i1);
     dir1=Direction_all{ij};
@@ -102,20 +116,20 @@ for i1=1:length(indxed)
     cap_all =all_C{ij};
     [cap,diag_cap,diag_cap_non_rem,zeta_lb,zeta_ub]=capacities_dirichlet(G,K,...
         E,N,set_non_rem, cap_all);
-    for jj = 1:length(conc_all)
-        param_conc = conc_all(jj);
-        in =  param_conc*ones(K,1);
-        a = zeros(n_ins,1);
+    for jj = 1:length(betas)
+        beta = betas(jj);
+        in =  beta*ones(K,1);
+        dist_all = zeros(n_ins,1);
         rng(seeds_dirichlet{i1})
         q_uni = ones(K,1)*(1/K);
         for i=1:n_train
             q_true = gamrnd(in , 1);
             q_true = q_true./sum(q_true);
-            h = norm(q_true-q_uni,2);
-            a(i,1) = h;
+            dist_qs = norm(q_true-q_uni,2);
+            dist_all(i,1) = dist_qs;
         end
-        b = sort(a);
-        Gamma = b(ceil(0.95*n_train));
+        sorted_gam = sort(dist_all);
+        Gamma = sorted_gam(ceil(0.95*n_train));
         Gammas(jj,ij)=Gamma;
         l1b=Gamma*(K^0.5);
         flag=0;
@@ -143,59 +157,45 @@ for i1=1:length(indxed)
         end
         supp_R_all{:,jj,ij}=supp_R;
         ustar_R_all{:,jj,ij}=ustar_R;
-        if (((cvar_D-cvar_R)/cvar_R)*100>1e-1) && (size(ustar_R,1))>1
-            rel_diff(jj,ij)=rel_diff(jj,ij)+((cvar_D-cvar_R)/cvar_R)*100;
-            instance_diff(jj,ij)=instance_diff(jj,ij)+1;
-        end
+        rel_diff(jj,ij)=rel_diff(jj,ij)+((cvar_D-cvar_R)/cvar_R)*100;
         flow_ran=zeros(size(supp_R,2),K);
         parfor i=1:size(supp_R,2)
             flow_ran(i,:) = flows_test(G, supp_R(:,i), cap, N,K);
         end
         fl_det= flows_test(G, deter_p, cap, N,K);
-        rel_improv(jj,ij)=rel_improv(jj,ij)+((cvar_D-cvar_R)/cvar_R)*100;
-        instance_improv(jj,ij)=instance_improv(jj,ij)+1;
         parfor i=1:K_out
             q_true = gamrnd(in , 1);
             q_true = q_true./sum(q_true);
             [cvar_out_R,zeta_ran]=test_given_q(fl_R,K,alpha,q_true',ustar_R);
             [cvar_det,zeta_det]=test_given_q(fl_det,K,alpha,q_true',1);
             cvar_out_ran_all(jj,i1,i) = cvar_out_R;
-            cvar_out_det(jj,i1,i) =cvar_det;
+            cvar_out_det_all(jj,i1,i) =cvar_det;
         end
     end
 end
+
+% % insample VRS for different values of concentration parameter
+filename = 'insampleVRS_with_conc_param.csv';
+avg_rel_diff =  squeeze(mean(rel_improv/len_indx,1));
+writematrix(avg_rel_diff, filename);
+
 len_indx = length(indxed);
-percentile_cvar =95;
+percentile_cvar = 95;
+mat_prctile=[];F=[];
 for jj=1:4
-    prctile_ran(:,jj) = prctile(reshape(cvar_out_ran_all(jj,:,:),length(indxed),K_out),percentile_cvar,2);
-    prctile_det(:,jj) = prctile(reshape(cvar_out_det(jj,:,:),length(indxed),K_out),percentile_cvar,2);
+    prctile_ran = prctile(reshape(cvar_out_ran_all(jj,:,:),length(indxed),K_out),percentile_cvar,2);
+    prctile_det = prctile(reshape(cvar_out_det_all(jj,:,:),length(indxed),K_out),percentile_cvar,2);
+    mat_prctile = [mat_prctile;prctile_det(:); prctile_ran(:)];
+    F = [F;repelem(["deterministic plan"; "randomized strategy"],...
+    len_indx,1)];
 end
-x =[];
-g=[];
-m=0;
-params_diri =[];
-F=[];
-pm=[1;3;5;7];
-copy_plan = repelem(["deterministic plan"; "randomized strategy"],...
-    len_indx*,1);
-for jj=1:length(conc_all)
-    x_R = prctile_ran(:,jj);
-    x_det = prctile_det(:,jj);
-    x = [x;x_det;x_R];
-    g = [g;(m+1)*ones(size(x_det));  (m+3)*ones(size(x_R))];
-%     colors = [colors; 1 0 0; 0 0.5 0];
-    params_diri = [params_diri; pm(jj)*ones(2*length(x_det),1)];
-    len_indx= length(x_det);
-    m=m+2;
-    %     F = [F;repelem(["Deterministic plan "; "Randomized_{L}"; "randomized strategy"],len_indx,1)];
-    F = [F;repelem(["deterministic plan"; "randomized strategy"],len_indx,1)];
-end
+xs=[1;3;5;7];
+
+beta_all = repelem(xs, 2*len_indx,1);
 h1=figure;
 varNames = {'Strategies','alphas','cvar'};
-T= table(F, params_diri, x, 'VariableNames',varNames);
+T= table(F,  beta_all, mat_prctile, 'VariableNames',varNames);
 h=boxchart(T.alphas,T.cvar,'GroupByColor',T.Strategies, 'MarkerStyle','.');
-hold on
-meandet = groupsummary(T.cvar,T.alphas,'mean');
 ylabel('$95$th Percentile of the out-of-sample CVaR', 'Interpreter','Latex', 'Fontsize',15);
 xlabel('Concentration parameter ($\beta$) of the Dirichlet distribution', 'Interpreter','Latex','Fontsize',15);
 legend('Interpreter','Latex','Fontsize',15)
