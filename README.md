@@ -10,7 +10,7 @@ This repository by [Utsav Sadana](https://utsav19.github.io/) and [Erick Delage]
 * [Gurobi](https://www.gurobi.com/) v9.0 or above
 
 
-Description  
+# Description of functions
 
 
 A description of the folders containing the functions used in the implementations is given below:
