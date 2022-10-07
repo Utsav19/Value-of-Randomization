@@ -1,0 +1,76 @@
+MATLAB is selecting SOFTWARE OPENGL rendering.
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2017 The MathWorks, Inc.
+                   R2017b (9.3.0.713579) 64-bit (glnxa64)
+                             September 14, 2017
+
+ 
+To get started, type one of these: helpwin, helpdesk, or demo.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> 
+gap =
+
+  -1.7350e-14
+
+
+cvar_ran =
+
+    5.1191
+
+
+time_tol2 =
+
+  187.8700
+
+
+ans =
+
+    0.0051
+
+
+cvar_discretize =
+
+  1x1 cell array
+
+    {[5.1193]}
+
+
+time_discrete =
+
+  1x1 cell array
+
+    {[2.8164e+03]}
+
+
+gap =
+
+    0.2956
+
+
+gap =
+
+    0.2956    0.2956
+
+
+time_tol2 =
+
+   3.7254e+03
+
+
+cvar_ran =
+
+    9.0801
+
+
+time_tol2 =
+
+   3.7254e+03
+
+>> >> >> 
+ans =
+
+  -43.6206
+
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> 
