@@ -15,8 +15,19 @@ This repository by [Utsav Sadana](https://utsav19.github.io/) and [Erick Delage]
 
 A description of the folders containing the functions used in the implementations is given below:
 
-- sbb_our_model: Functions to implement spatial branch and bound algorithm coupled with columnn generation procedure
+- sbb_our_model: Functions to implement spatial branch and bound algorithm coupled with columnn generation procedure (sbb-CG)
+- Heuristic: Functions to implement the heuristic combined with CG
 - Consgen: Functions to implement constraint generation algorithm
-- Gurobi: Contains the code that uses Gurobi's bilinear solver and functions implementation of spatial branch and bound without column generation
-- Loizou_model: Functions to implement [Distributionally Robust Game Theory](https://arxiv.org/abs/1512.03253) for our network interdiction problem using our column generation algorithm
-- network_instances: Contains csv files to generate the Sioux Falls network and Nobel-US network. Also, it contains the functions to randomly generate network instances and capacities of the network
+- Gurobi: Contains the code that uses Gurobi's bilinear solver and functions implementation of spatial branch and bound without CG
+- Loizou_model: Functions to implement the model in [Distributionally Robust Game Theory](https://arxiv.org/abs/1512.03253) for the network interdiction problem using our CG algorithm
+- network_instances: Contains csv files to generate the Sioux Falls network and Nobel-US network. Also, it contains the functions to randomly generate network instances and capacities of the networ
+
+
+To get the tables and figures in the paper, run the following files:
+
+- ConvergenceGridNetwork.m: Convergence of sbb-CG with random instances as well as with instances for which there is value in randomization
+- Compare_sbb_heuristic.m: Comparison of computation times for heuristic and sbb-CG
+- ConvergenceGridNetwork.m Comparison of Gurobi's bilinear solver, constraint generation algorithm, and our sbb algorithm without CG and with CG
+- ConvergenceGridNetwork.m Comparison of Gurobi's bilinear solver, constraint generation algorithm, and our sbb without CG and with CG
+- VRAM.m: value of risk-averse model
+- 
