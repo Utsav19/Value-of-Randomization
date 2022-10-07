@@ -5,10 +5,9 @@ This repository by [Utsav Sadana](https://utsav19.github.io/) and [Erick Delage]
 # Dependencies
 
 * [MATLAB](https://www.mathworks.com/products/matlab.html)
-* [YALMIP](https://yalmip.github.io/)
-* [CPLEX](https://www.ibm.com/analytics/cplex-optimizer)
-* [Gurobi v9.0 or above](https://www.gurobi.com/)
-
+* [YALMIP](https://yalmip.github.io/) toolbox
+* [CPLEX](https://www.ibm.com/analytics/cplex-optimizer) solver
+* [Gurobi](https://www.gurobi.com/) solver, v9.0 or above
 
 
 
