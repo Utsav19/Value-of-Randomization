@@ -14,12 +14,10 @@ tol2=0.01;
 tol4=0.01;
 load all_instances_performance
 ins_nconvrg=zeros(n_ins,1);
-addpath('./instances')
-addpath('./functions')
-addpath('./functions/sbb_our_model')
+addpath(genpath('~/Desktop/ValueofRandomization/'));
 ij=1:100;
-load 'All Results'/VRS_SBB_Louizou.mat
-cvar_D= cvar_D_100(:,:,3,:);
+load VRS_SBB_Louizou.mat
+cvar_D= cvar_D_all(:,:,3,:);
 cvar_R= cvar_R_100(:,:,3,:);
 rel_SD_diff= 100*(cvar_D - cvar_R)./cvar_R;
 cvar_D= cvar_D_100(:,:,3,:);
@@ -76,7 +74,7 @@ for ij=1:n_ins
             ustar=[];
             
             [rel_gap,gap,ub_iter,branch_iter,gap_tol4, time_tol4, cvar_R,zeta_ran,z_supp_R, u_R,time_tol2,...
-                flag,gap_tol2,time_yalmip,time_cplex,least_lb] = spatial_BB_showconvergence(l_in,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
+                flag,gap_tol2,time_yalmip,time_cplex,least_lb] = sbb_CG(l_in,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
                 flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol4,time_exit,set_non_rem,...
                 diag_cap_non_rem,set_rem,time_yalmip,time_gurobi,l1b);
             
