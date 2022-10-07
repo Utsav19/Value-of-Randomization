@@ -6,7 +6,7 @@ B =2; % B=1 for results in online supplement
 B_sioux=1;
 n_iter_CD=2;partitions_sbb=1;
 K_all=[100;150;200];
-time_exit=1800;
+time_exit=600;
 tol2=0.01;
 num_ins=10;
 cplx=0;
@@ -75,10 +75,10 @@ for it1 = 1:2
             time_yalmip=0;
             time=0;
             flag = 0;
-            [time_sbb, cvar_ran, ~,~,~,flag] = sbb_withoutCG(flow_k,K, Gamma,alpha,partitions_sbb,...
+            [time, cvar_ran, ~,~,~,flag] = sbb_withoutCG(flow_k,K, Gamma,alpha,partitions_sbb,...
                 flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol2,time_exit,set_non_rem,...
                 diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
-            time_sbb(ij,k, it1)=time_sbb;
+            time_sbb(ij,k, it1)=time;
             cvar_sbb(ij,k, it1)=cvar_ran;
             convrge_sbb_withoutCG(ij,k, it1)=flag;
             % % Constraint Generation
@@ -86,8 +86,8 @@ for it1 = 1:2
             [u, zeta,   cvar, time, J_lists, flag, ts]  =  ConsGen_GurobiBilinear(flow_k,zeta_lb,zeta_ub,...
             qhat, tol2, alpha, Gamma, K, time, time_exit,tol2);
             convrge_consgen(ij,k,it1) = flag;
-            time_consgen(ij,k)=time;
-            cvar_consgen(ij,k)=cvar;
+            time_consgen(ij,k,it1)=time;
+            cvar_consgen(ij,k,it1)=cvar;
             time_last_consgen(ij,k, it1) = ts(end);
             iter_last_consgen(ij,k, it1) = length(ts);
 
@@ -107,9 +107,8 @@ avg_time_gurobi_bilinear = mean(time_gurobi_bilinear, 1);
 avg_time_consgen = mean(time_consgen, 1);
 avg_time_sbb = mean(time_sbb, 1);
 avg_time_sbb_CG = mean(time_sbb_CG, 1);
-mat = [avg_time_gurobi_bilinear avg_time_consgen(:)...
-    avg_time_sbb(:) avg_time_sbb_CG(:)];
-mat = reshape(mat, [],2);
+mat = [avg_time_gurobi_bilinear(:) avg_time_sbb(:)...
+    avg_time_sbb_CG(:) avg_time_consgen(:)];
 filename = 'Compare_Gurobi_SBB_realnetworks.csv';
 writematrix(mat, filename)
 

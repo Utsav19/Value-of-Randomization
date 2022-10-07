@@ -5,7 +5,7 @@ clear
 close all
 VRS =  input(['Enter 1 to run experiments for instances for which Value of ' ...
     'randomization is greater than 0.1%, otherwise 0:\n']);
-num_ins=2;alpha=0.05;
+num_ins=10;alpha=0.05;
 size_net =[10; 15; 20];
 n_iter_CD=2; partitions_sbb=1;
 time_exit=7200;tol2=0.01;tol4=0.0001;
@@ -26,7 +26,6 @@ for ii=1:length(size_net)
     for kk=1:length(Gammas)
         Gamma=Gammas(kk);
         for ij=1:num_ins
-            ij
             if VRS==1
                 rng(seed_VRS(ij,kk,ii));
             else

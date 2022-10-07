@@ -6,7 +6,7 @@ alpha=0.05;
 p=5; r=5; 
 n_iter_CD=2;partitions_sbb=1;
 K_all=[100;150;200];
-time_exit=1800;
+time_exit=600;
 tol2=0.01;
 num_ins=10;
 cplx=0;
@@ -61,10 +61,10 @@ for ij=1:num_ins
         time_yalmip=0;
         time=0;
         flag = 0;
-        [time_sbb, cvar_ran, ~,~,~,flag] = sbb_withoutCG(flow_k,K, Gamma,alpha,partitions_sbb,...
+        [time, cvar_ran, ~,~,~,flag] = sbb_withoutCG(flow_k,K, Gamma,alpha,partitions_sbb,...
             flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol2,time_exit,set_non_rem,...
             diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
-        time_sbb(ij,k)=time_sbb;
+        time_sbb(ij,k)=time;
         cvar_sbb(ij,k)=cvar_ran;
         convrge_sbb_withoutCG(ij,k)=flag;
         % % Constraint Generation
@@ -92,8 +92,8 @@ avg_time_gurobi_bilinear = squeeze(mean(time_gurobi_bilinear, 1));
 avg_time_consgen = squeeze(mean(time_consgen, 1));
 avg_time_sbb = squeeze(mean(time_sbb, 1));
 avg_time_sbb_CG = squeeze(mean(time_sbb_CG, 1));
-mat = [avg_time_gurobi_bilinear(:) avg_time_consgen(:)...
-    avg_time_sbb(:) avg_time_sbb_CG(:)]; 
+mat = [avg_time_gurobi_bilinear(:) avg_time_sbb(:)...
+    avg_time_sbb_CG(:) avg_time_consgen(:)]; 
 filename = 'Compare_Gurobi_SBB_Gridnetwork.csv';
 writematrix(mat, filename)
 

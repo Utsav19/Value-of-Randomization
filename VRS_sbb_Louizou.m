@@ -88,8 +88,8 @@ alpha=0.1;
 B=9;
 idx1 = find(alpha_set==alpha);
 idx2 = find(B_set==B);
-cvar_D= squeeze(cvar_D_100(:,idx1,idx2,:));
-cvar_R= squeeze(cvar_R_100(:,idx1,idx2,:));
+cvar_D= squeeze(cvar_det_all(:,idx1,idx2,:));
+cvar_R= squeeze(cvar_sbb_all(:,idx1,idx2,:));
 rel_SD_diff= 100*(cvar_D - cvar_R)./cvar_R;
 indx = rel_SD_diff(:,1)>=1;
 A=ij(indx);
@@ -119,7 +119,7 @@ for i1=1:length(indxed)
     for jj = 1:length(betas)
         beta = betas(jj);
         in =  beta*ones(K,1);
-        dist_all = zeros(n_ins,1);
+        dist_all = zeros(n_train,1);
         rng(seeds_dirichlet{i1})
         q_uni = ones(K,1)*(1/K);
         for i=1:n_train
@@ -133,19 +133,17 @@ for i1=1:length(indxed)
         Gammas(jj,ij)=Gamma;
         l1b=Gamma*(K^0.5);
         flag=0;
-        [cvar_D,deter_p,l_h] = minimize_wcvar(E,N,B,alpha,Gamma,qhat, K,...
+        [cvar_D,deter_p,l_h] = deterministic_wcvar(E,N,B,alpha,Gamma,qhat, K,...
             diag_cap,set_non_rem,diag_cap_non_rem,set_rem,zeta_lb,zeta_ub,l1b, cplx);
-        l_in=round(l_h);
+        l_0=round(l_h);
         cvar_det(jj,ij)=cvar_D;
         deter_plan(:,jj,ij)=deter_p;
         time_yalmip=0;
         time=0;
         ustar=[];
-        [rel_gap,gap,ub_iter,branch_iter,gap_tol4, time_tol4, cvar_R,zeta_ran,z_supp_R, u_R,time_tol2,...
-            flag,gap_tol2,~,time,least_lb] = sbb_CG(l_in,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
-            flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol4,time_exit,set_non_rem,...
-            diag_cap_non_rem,set_rem,time_yalmip,time,l1b);
-        l_in=[ones(B,1);zeros(E-size_set_non_rem-B,1)];
+        [~, cvar_R, u_R,~,flag, leastLB,z_supp_R] = sbb_CG(l_0,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
+            flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol2,time_exit,set_non_rem,...
+            diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
         time_yalmip = 0;
         ustar_R=[];
         supp_R=[];
