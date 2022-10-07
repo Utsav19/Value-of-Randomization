@@ -17,6 +17,6 @@ A description of the folders containing the functions used in the implementation
 
 - sbb_our_model: Functions to implement spatial branch and bound algorithm coupled with columnn generation procedure
 - Consgen: Functions to implement constraint generation algorithm
-- Gurobi: Contains the code that uses Gurobi's bilinear solver and implementation of spatial branch and bound without column generation
-- Loizou_model: Functions to implement (https://arxiv.org/abs/1512.032530 for our network interdiction problem using our column generation algorithm
+- Gurobi: Contains the code that uses Gurobi's bilinear solver and functions implementation of spatial branch and bound without column generation
+- Loizou_model: Functions to implement [Distributionally Robust Game Theory](https://arxiv.org/abs/1512.03253) for our network interdiction problem using our column generation algorithm
 - network_instances: Contains csv files to generate the Sioux Falls network and Nobel-US network. Also, it contains the functions to randomly generate network instances and capacities of the network
