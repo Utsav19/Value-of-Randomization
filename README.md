@@ -23,11 +23,12 @@ A description of the folders containing the functions used in the implementation
 - network_instances: Contains csv files to generate the Sioux Falls network and Nobel-US network. Also, it contains the functions to randomly generate network instances and capacities of the networ
 
 
-To get the tables and figures in the paper, run the following files:
+To obtain the tables and figures in the paper, run the following files in MATLAB:
 
 - ConvergenceGridNetwork.m: Convergence of sbb-CG with random instances as well as with instances for which there is value in randomization
 - Compare_sbb_heuristic.m: Comparison of computation times for heuristic and sbb-CG
-- ConvergenceGridNetwork.m Comparison of Gurobi's bilinear solver, constraint generation algorithm, and our sbb algorithm without CG and with CG
-- ConvergenceGridNetwork.m Comparison of Gurobi's bilinear solver, constraint generation algorithm, and our sbb without CG and with CG
-- VRAM.m: value of risk-averse model
+- ConvergenceGridNetwork.m Comparison of Gurobi's bilinear solver, constraint generation algorithm, and our sbb algorithm without CG and with CG on a randomly generated grid network
+- ConvergenceGridNetwork.m Comparison of Gurobi's bilinear solver, constraint generation algorithm, and our sbb without CG and with CG on the Sioux-falls and Nobel-Us networks
+- VRAM.m: value of risk-averse model as a function of risk-aversion parameter
+- VRS_SBB_Loizou: Insample performance of our model and the model in Loizou, and out-of-sample performance of policies obtained from our model
 - 
