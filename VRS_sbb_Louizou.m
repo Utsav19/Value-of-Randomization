@@ -76,7 +76,7 @@ for i=1:2
         VRS_high1(:) avg_VRS(:)];
 end
 
-filename = 'Insample_VRS-sbb_Loizou.csv';
+filename = 'Insample_VRS_sbb_Loizou.csv';
 writematrix(mat, filename);
 
 
@@ -188,7 +188,6 @@ for jj=1:4
     len_indx,1)];
 end
 xs=[1;3;5;7];
-
 beta_all = repelem(xs, 2*len_indx,1);
 h1=figure;
 varNames = {'Strategies','alphas','cvar'};
