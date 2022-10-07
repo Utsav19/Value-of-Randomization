@@ -7,7 +7,7 @@ This repository by [Utsav Sadana](https://utsav19.github.io/) and [Erick Delage]
 * [MATLAB](https://www.mathworks.com/products/matlab.html)
 * [YALMIP](https://yalmip.github.io/)
 * [CPLEX](https://www.ibm.com/analytics/cplex-optimizer)
-* [Gurobi](https://www.gurobi.com/)
+* [Gurobi v9.0 or above](https://www.gurobi.com/)
 
 
 
