@@ -17,7 +17,7 @@ cvar_sbb_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1))
 cvar_det_all = zeros(num_ins, size(Gamma_set,1),size(B_set,1),size(alpha_set,1));
 tol2=0.01;
 addpath(genpath('~/Desktop/ValueofRandomization/'))
-load all_instances_performance
+load instances_VRS
 ins_nconvrg=zeros(num_ins,1);
 cplx=1;
 for ij=1:num_ins

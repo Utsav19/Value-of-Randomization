@@ -103,7 +103,7 @@ for it1 = 1:2
         end    
     end
 end
-avg_time_gurobi_bilinear = mean(time_sbb_gurobi, 1);
+avg_time_gurobi_bilinear = mean(time_gurobi_bilinear, 1);
 avg_time_consgen = mean(time_consgen, 1);
 avg_time_sbb = mean(time_sbb, 1);
 avg_time_sbb_CG = mean(time_sbb_CG, 1);

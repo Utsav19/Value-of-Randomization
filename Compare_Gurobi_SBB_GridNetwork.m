@@ -88,7 +88,7 @@ for ij=1:num_ins
         cvar_sbb_CG(ij,k)=cvar_random_policy;
     end
 end
-avg_time_gurobi_bilinear = squeeze(mean(time_sbb_gurobi, 1));
+avg_time_gurobi_bilinear = squeeze(mean(time_gurobi_bilinear, 1));
 avg_time_consgen = squeeze(mean(time_consgen, 1));
 avg_time_sbb = squeeze(mean(time_sbb, 1));
 avg_time_sbb_CG = squeeze(mean(time_sbb_CG, 1));
