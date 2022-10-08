@@ -176,9 +176,11 @@ writematrix(avg_rel_diff, filename);
 len_indx = length(inst_improv);
 percentile_cvar = 95;
 mat_prctile=[];F=[];
+prctile_ran=zeros(len_indx,length(betas));
+prctile_det=zeros(len_indx,length(betas));
 for jj=1:4
-    prctile_ran = prctile(cvar_out_ran_all(:,:,jj),percentile_cvar,1);
-    prctile_det = prctile(cvar_out_det_all(:,:,jj),percentile_cvar,1);
+    prctile_ran(:,jj)= prctile(cvar_out_ran_all(:,:,jj),percentile_cvar,1);
+    prctile_det(:,jj) = prctile(cvar_out_det_all(:,:,jj),percentile_cvar,1);
     mat_prctile = [mat_prctile;prctile_det(:); prctile_ran(:)];
     F = [F;repelem(["deterministic plan"; "randomized strategy"],...
     len_indx,1)];
