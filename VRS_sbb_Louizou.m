@@ -108,6 +108,7 @@ qhat=(1/K)*ones(1,K);
 load seeds_out_sample.mat
 rel_diff = zeros(length(inst_improv),length(betas));
 betas = [0.1;0.3;0.5;0.8];
+%% out of sample VRS
 for i1=1:length(inst_improv)
     ij = inst_improv(i1);
     dir1=Direction_all{ij};
@@ -150,24 +151,24 @@ for i1=1:length(inst_improv)
                 ustar_R(end+1,1)=u_R(it,1);
             end
         end
-        rel_diff(jj,ij)=rel_diff(jj,ij)+((cvar_D-cvar_R)/cvar_R)*100;
+        rel_diff(i1,jj)=rel_diff(i1,jj)+((cvar_D-cvar_R)/cvar_R)*100;
         flow_ran=zeros(size(supp_R,2),K);
         parfor i=1:size(supp_R,2)
             flow_ran(i,:) = flows_test(G, supp_R(:,i), cap, N,K);
         end
-        fl_det= flows_test(G, deter_p, cap, N,K);
+        flow_det= flows_test(G, deter_p, cap, N,K);
         parfor i=1:K_out
             q_true = gamrnd(in , 1);
             q_true = q_true./sum(q_true);
-            [cvar_out_R,zeta_ran]=test_given_q(fl_R,K,alpha,q_true',ustar_R);
-            [cvar_det,zeta_det]=test_given_q(fl_det,K,alpha,q_true',1);
+            [cvar_out_R,zeta_ran]=test_given_q(flow_ran,K,alpha,q_true',ustar_R);
+            [cvar_det,zeta_det]=test_given_q(flow_det,K,alpha,q_true',1);
             cvar_out_ran_all(i,i1,jj) = cvar_out_R;
             cvar_out_det_all(i,i1,jj) =cvar_det;
         end
     end
 end
 
-% % insample VRS for different values of concentration parameter
+% % generate table VRS for different values of concentration parameter
 filename = 'insampleVRS_with_conc_param.csv';
 avg_rel_diff =  squeeze(mean(rel_improv/len_indx,1));
 writematrix(avg_rel_diff, filename);
@@ -191,7 +192,6 @@ h=boxchart(T.alphas,T.cvar,'GroupByColor',T.Strategies, 'MarkerStyle','.');
 ylabel('$95$th Percentile of the out-of-sample CVaR', 'Interpreter','Latex', 'Fontsize',15);
 xlabel('Concentration parameter ($\beta$) of the Dirichlet distribution', 'Interpreter','Latex','Fontsize',15);
 legend('Interpreter','Latex','Fontsize',15)
-
 ax = h.Parent;  % axis handle
 ax.XTickLabel([2,4,6,8]) = {'0.1','0.3','0.5','0.8'};
 ax.XTickLabel([1,3,5,7,9,10]) = {''};

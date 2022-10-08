@@ -4,12 +4,9 @@ function [time_tol4, bestUB, ustar,time_tol2,time_yalmip, flag]=sbb_withoutCG(fl
     L=size(fl_opt,1);
     fh=0;
     time_s=cputime;
-    time_tol4=100000;
-    ustar=100000;
-    time_tol2=100000;
     import java.util.ArrayDeque
     que = ArrayDeque();
-    bestUB=100000;
+    bestUB=1e6;
     z_lb=zeta_lb;
     [u,LB,zeta,time_yalmip,time]=opt_lowerbound(fl_opt,L,K,z_lb,zeta_ub, alpha, Gamma,qhat,...
         time_yalmip,time,l1b, cplx);

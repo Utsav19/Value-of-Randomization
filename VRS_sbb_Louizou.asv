@@ -20,7 +20,7 @@ addpath(genpath('~/Desktop/ValueofRandomization/'))
 load instances_VRS
 ins_nconvrg=zeros(num_ins,1);
 cplx=1;
-%% Insample VRS from our model and
+%% Insample VRS from our model and Loizou
 for ij=1:num_ins
     dir1=Direction_all{ij};
     G = graph_generate(p,r,dir1);
@@ -108,6 +108,7 @@ qhat=(1/K)*ones(1,K);
 load seeds_out_sample.mat
 rel_diff = zeros(length(inst_improv),length(betas));
 betas = [0.1;0.3;0.5;0.8];
+%% out of sample VRS
 for i1=1:length(inst_improv)
     ij = inst_improv(i1);
     dir1=Direction_all{ij};
@@ -167,7 +168,7 @@ for i1=1:length(inst_improv)
     end
 end
 
-% % insample VRS for different values of concentration parameter
+% % generate table VRS for different values of concentration parameter
 filename = 'insampleVRS_with_conc_param.csv';
 avg_rel_diff =  squeeze(mean(rel_improv/len_indx,1));
 writematrix(avg_rel_diff, filename);
