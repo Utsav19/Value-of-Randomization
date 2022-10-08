@@ -92,11 +92,11 @@ idx2 = find(B_set==B);
 cvar_D= squeeze(cvar_det_all(:,idx1,idx2,:));
 cvar_R= squeeze(cvar_sbb_all(:,idx1,idx2,:));
 rel_SD_diff= 100*(cvar_D - cvar_R)./cvar_R;
-indx = rel_SD_diff(:,1)>=1;
-A=ij(indx);
+idx = rel_SD_diff(:,1)>=1;
+A=ij(idx);
 for i=1:size(Gamma_set)-1
-    indx_next = rel_SD_diff(:,i+1)>=1;
-    Ap=ij(indx_next);
+    idx_next = rel_SD_diff(:,i+1)>=1;
+    Ap=ij(idx_next);
     inst_improv =intersect(A,Ap);
     A=inst_improv;
 end
@@ -151,17 +151,17 @@ for i1=1:length(inst_improv)
                 ustar_R(end+1,1)=u_R(it,1);
             end
         end
-        rel_diff(jj,ij)=rel_diff(jj,ij)+((cvar_D-cvar_R)/cvar_R)*100;
+        rel_diff(i1,jj)=rel_diff(i1,jj)+((cvar_D-cvar_R)/cvar_R)*100;
         flow_ran=zeros(size(supp_R,2),K);
         parfor i=1:size(supp_R,2)
             flow_ran(i,:) = flows_test(G, supp_R(:,i), cap, N,K);
         end
-        fl_det= flows_test(G, deter_p, cap, N,K);
+        flow_det= flows_test(G, deter_p, cap, N,K);
         parfor i=1:K_out
             q_true = gamrnd(in , 1);
             q_true = q_true./sum(q_true);
-            [cvar_out_R,zeta_ran]=test_given_q(fl_R,K,alpha,q_true',ustar_R);
-            [cvar_det,zeta_det]=test_given_q(fl_det,K,alpha,q_true',1);
+            [cvar_out_R,zeta_ran]=test_given_q(flow_ran,K,alpha,q_true',ustar_R);
+            [cvar_det,zeta_det]=test_given_q(flow_det,K,alpha,q_true',1);
             cvar_out_ran_all(i,i1,jj) = cvar_out_R;
             cvar_out_det_all(i,i1,jj) =cvar_det;
         end
@@ -192,7 +192,6 @@ h=boxchart(T.alphas,T.cvar,'GroupByColor',T.Strategies, 'MarkerStyle','.');
 ylabel('$95$th Percentile of the out-of-sample CVaR', 'Interpreter','Latex', 'Fontsize',15);
 xlabel('Concentration parameter ($\beta$) of the Dirichlet distribution', 'Interpreter','Latex','Fontsize',15);
 legend('Interpreter','Latex','Fontsize',15)
-
 ax = h.Parent;  % axis handle
 ax.XTickLabel([2,4,6,8]) = {'0.1','0.3','0.5','0.8'};
 ax.XTickLabel([1,3,5,7,9,10]) = {''};

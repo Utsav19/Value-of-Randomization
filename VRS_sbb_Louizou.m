@@ -92,11 +92,11 @@ idx2 = find(B_set==B);
 cvar_D= squeeze(cvar_det_all(:,idx1,idx2,:));
 cvar_R= squeeze(cvar_sbb_all(:,idx1,idx2,:));
 rel_SD_diff= 100*(cvar_D - cvar_R)./cvar_R;
-indx = rel_SD_diff(:,1)>=1;
-A=ij(indx);
+idx = rel_SD_diff(:,1)>=1;
+A=ij(idx);
 for i=1:size(Gamma_set)-1
-    indx_next = rel_SD_diff(:,i+1)>=1;
-    Ap=ij(indx_next);
+    idx_next = rel_SD_diff(:,i+1)>=1;
+    Ap=ij(idx_next);
     inst_improv =intersect(A,Ap);
     A=inst_improv;
 end
@@ -122,7 +122,7 @@ for i1=1:length(inst_improv)
         beta = betas(jj);
         in =  beta*ones(K,1);
         dist_all = zeros(n_train,1);
-        rng(seeds_dirichlet{i1})
+        rng(seeds_dirichlet{i1});
         q_uni = ones(K,1)*(1/K);
         for i=1:n_train
             q_true = gamrnd(in , 1);
