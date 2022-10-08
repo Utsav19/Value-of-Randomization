@@ -20,6 +20,7 @@ addpath(genpath('~/Desktop/ValueofRandomization/'))
 load instances_VRS
 ins_nconvrg=zeros(num_ins,1);
 cplx=1;
+%% Insample VRS from our model and Loizou
 for ij=1:num_ins
     dir1=Direction_all{ij};
     G = graph_generate(p,r,dir1);
@@ -96,8 +97,8 @@ A=ij(indx);
 for i=1:size(Gamma_set)-1
     indx_next = rel_SD_diff(:,i+1)>=1;
     Ap=ij(indx_next);
-    indxed =intersect(A,Ap);
-    A=indxed;
+    inst_improv =intersect(A,Ap);
+    A=inst_improv;
 end
 
 n_train=100;
@@ -105,10 +106,10 @@ instance_all=[];
 alpha=0.1;
 qhat=(1/K)*ones(1,K);
 load seeds_out_sample.mat
-
+rel_diff = zeros(length(inst_improv),length(betas));
 betas = [0.1;0.3;0.5;0.8];
-for i1=1:length(indxed)
-    ij = indxed(i1);
+for i1=1:length(inst_improv)
+    ij = inst_improv(i1);
     dir1=Direction_all{ij};
     G = graph_generate(p,r,dir1);
     [E,N,set_non_rem,set_rem]= graph_set_rem(G,p,r); % generate set of removable and nonremovable arcs
@@ -130,21 +131,17 @@ for i1=1:length(indxed)
         end
         sorted_gam = sort(dist_all);
         Gamma = sorted_gam(ceil(0.95*n_train));
-        Gammas(jj,ij)=Gamma;
         l1b=Gamma*(K^0.5);
         flag=0;
         [cvar_D,deter_p,l_h] = deterministic_wcvar(E,N,B,alpha,Gamma,qhat, K,...
             diag_cap,set_non_rem,diag_cap_non_rem,set_rem,zeta_lb,zeta_ub,l1b, cplx);
         l_0=round(l_h);
-        cvar_det(jj,ij)=cvar_D;
-        deter_plan(:,jj,ij)=deter_p;
         time_yalmip=0;
         time=0;
         ustar=[];
         [~, cvar_R, u_R,~,flag, leastLB,z_supp_R] = sbb_CG(l_0,cap,diag_cap,E, N, G,B,K,Gamma,alpha,partitions_sbb,...
             flag,qhat,n_iter_CD,zeta_lb,zeta_ub,tol2,tol2,time_exit,set_non_rem,...
             diag_cap_non_rem,set_rem,time_yalmip,time,l1b, cplx);
-        time_yalmip = 0;
         ustar_R=[];
         supp_R=[];
         for it=1:size(u_R,1)
@@ -153,8 +150,6 @@ for i1=1:length(indxed)
                 ustar_R(end+1,1)=u_R(it,1);
             end
         end
-        supp_R_all{:,jj,ij}=supp_R;
-        ustar_R_all{:,jj,ij}=ustar_R;
         rel_diff(jj,ij)=rel_diff(jj,ij)+((cvar_D-cvar_R)/cvar_R)*100;
         flow_ran=zeros(size(supp_R,2),K);
         parfor i=1:size(supp_R,2)
@@ -166,8 +161,8 @@ for i1=1:length(indxed)
             q_true = q_true./sum(q_true);
             [cvar_out_R,zeta_ran]=test_given_q(fl_R,K,alpha,q_true',ustar_R);
             [cvar_det,zeta_det]=test_given_q(fl_det,K,alpha,q_true',1);
-            cvar_out_ran_all(jj,i1,i) = cvar_out_R;
-            cvar_out_det_all(jj,i1,i) =cvar_det;
+            cvar_out_ran_all(i,i1,jj) = cvar_out_R;
+            cvar_out_det_all(i,i1,jj) =cvar_det;
         end
     end
 end
@@ -177,12 +172,12 @@ filename = 'insampleVRS_with_conc_param.csv';
 avg_rel_diff =  squeeze(mean(rel_improv/len_indx,1));
 writematrix(avg_rel_diff, filename);
 
-len_indx = length(indxed);
+len_indx = length(inst_improv);
 percentile_cvar = 95;
 mat_prctile=[];F=[];
 for jj=1:4
-    prctile_ran = prctile(reshape(cvar_out_ran_all(jj,:,:),length(indxed),K_out),percentile_cvar,2);
-    prctile_det = prctile(reshape(cvar_out_det_all(jj,:,:),length(indxed),K_out),percentile_cvar,2);
+    prctile_ran = prctile(cvar_out_ran_all(:,:,jj),percentile_cvar,1);
+    prctile_det = prctile(cvar_out_det_all(:,:,jj),percentile_cvar,1);
     mat_prctile = [mat_prctile;prctile_det(:); prctile_ran(:)];
     F = [F;repelem(["deterministic plan"; "randomized strategy"],...
     len_indx,1)];
