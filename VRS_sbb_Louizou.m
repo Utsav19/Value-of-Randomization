@@ -170,7 +170,7 @@ end
 
 % % generate table VRS for different values of concentration parameter
 filename = 'insampleVRS_with_conc_param.csv';
-avg_rel_diff =  squeeze(mean(rel_improv/len_indx,1));
+avg_rel_diff =  squeeze(mean(rel_diff,1));
 writematrix(avg_rel_diff, filename);
 
 len_indx = length(inst_improv);
